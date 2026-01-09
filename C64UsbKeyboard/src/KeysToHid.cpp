@@ -52,26 +52,79 @@ void KeysToHid::sendReport(KeyReport *keys) {
 }
 
 void KeysToHid::reportKeys(RawKeysArray rawKeys, uint8_t scannedKeys) {
-  uint_fast8_t keySlot = 0;
+  HidKeysArray hidKeys;
+
   releaseAll();
 
   if (scannedKeys != 0) {
-    // for (RawKey rawKey : rawKeys) {
     for (uint_fast8_t i = 0; i < scannedKeys; i++) {
       RawKey rawKey = rawKeys[i];
-      uint8_t hidCode = rawToHid(rawKey);
-      if (addIfModifier(hidCode)) {
-        continue;
-      } else {
-        _keyReport.keys[keySlot++] = hidCode;
-        // If we have more than 6 keys, we ignore the rest.
-        if (keySlot > 5) {
-          break;
-        }
+      hidKeys[i] = rawToHid(rawKey);
+    }
+
+    if (shiftAndCursorActive(hidKeys, scannedKeys)) {
+      writeCursorToReport(hidKeys, scannedKeys);
+    } else {
+      writeHidToReport(hidKeys, scannedKeys);
+    }
+  }
+
+  sendReport(&_keyReport);
+}
+
+// Unfortunately the FPGA Companion OSD does not recognize Shift-Cursor keys. 
+// So, if we detect Shift and Cursor down or right, we sent the corresponding
+// HID-Key and ignore all other keys. 
+void KeysToHid::writeCursorToReport(HidKeysArray hidKeys, uint8_t scannedKeys) {
+  uint_fast8_t keySlot = 0;
+  for (uint_fast8_t i = 0; i < scannedKeys; i++) {
+    uint8_t hidCode = hidKeys[i];
+
+    if (hidCode == KEY_RIGHT) {
+      _keyReport.keys[keySlot++] = KEY_LEFT; 
+    }
+    if (hidCode == KEY_DOWN) {
+      _keyReport.keys[keySlot++] = KEY_UP; 
+    }
+    if (keySlot > 5) { 
+      break;
+    }
+  }
+}
+
+bool KeysToHid::shiftAndCursorActive(HidKeysArray hidKeys,
+                                     uint8_t scannedKeys) {
+  bool shiftFlag = false;
+  bool cursorFlag = false;
+
+  for (uint_fast8_t i = 0; i < scannedKeys; i++) {
+    uint8_t hidCode = hidKeys[i];
+    if ((hidCode == KEY_RIGHTSHIFT) || (hidCode == KEY_LEFTSHIFT)) {
+      shiftFlag = true;
+    }
+    if ((hidCode == KEY_RIGHT) || (hidCode == KEY_DOWN)) {
+      cursorFlag = true;
+    }
+    if (shiftFlag && cursorFlag) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void KeysToHid::writeHidToReport(HidKeysArray hidKeys, uint8_t scannedKeys) {
+  uint_fast8_t keySlot = 0;
+  for (uint_fast8_t i = 0; i < scannedKeys; i++) {
+    if (addIfModifier(hidKeys[i])) {
+      continue;
+    } else {
+      _keyReport.keys[keySlot++] = hidKeys[i];
+      // If we have more than 6 keys, we ignore the rest.
+      if (keySlot > 5) {
+        break;
       }
     }
   }
-  sendReport(&_keyReport);
 }
 
 bool KeysToHid::addIfModifier(uint8_t hidCode) {
@@ -106,7 +159,7 @@ void KeysToHid::dumpKeyReport() {
   Serial.printf("Modifiers: %i ", _keyReport.modifiers);
   Serial.printf("Keys: ");
   for (uint_fast8_t i = 0; i < 6; i++) {
-    Serial.printf("%i: 0x%x, ",i, _keyReport.keys[i]);
+    Serial.printf("%i: 0x%x, ", i, _keyReport.keys[i]);
   }
   Serial.println();
 }

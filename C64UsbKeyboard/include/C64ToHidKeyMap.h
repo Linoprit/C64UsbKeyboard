@@ -17,8 +17,8 @@ static const uint8_t C64Keymap[9][9] PROGMEM = {
   {KEY_7,         KEY_Y,          KEY_G,          KEY_V,         KEY_B,          KEY_H,         KEY_U,         KEY_8,     KEY_NONE}, // 3 D
   {KEY_9,         KEY_I,          KEY_J,          KEY_N,         KEY_M,          KEY_K,         KEY_O,         KEY_0,     KEY_NONE}, // 4 E
   {KEY_EQUAL,     KEY_P,          KEY_L,          KEY_COMMA,     KEY_DOT,        KEY_SEMICOLON, KEY_LEFTBRACE, KEY_MINUS, KEY_NONE}, // 5 F
-  {KEY_BACKSLASH, KEY_RIGHTBRACE, KEY_APOSTROPHE, KEY_SLASH,     KEY_RIGHTSHIFT, KEY_END,       KEY_PAGEDOWN,  KEY_HOME,  KEY_NONE}, // 6 G
-  {KEY_BACKSPACE, KEY_ENTER,      KEY_LEFT,       KEY_DOWN,      KEY_F1,         KEY_F3,        KEY_F5,        KEY_F7,    KEY_NONE}, // 7 H
+  {KEY_BACKSLASH, KEY_RIGHTBRACE, KEY_APOSTROPHE, KEY_SLASH,     KEY_RIGHTSHIFT, KEY_F10,       KEY_PAGEDOWN,  KEY_HOME,  KEY_NONE}, // 6 G
+  {KEY_BACKSPACE, KEY_ENTER,      KEY_RIGHT,      KEY_DOWN,      KEY_F1,         KEY_F3,        KEY_F5,        KEY_F7,    KEY_NONE}, // 7 H
   {KEY_F12,       KEY_PAGEUP,     KEY_NONE,       KEY_NONE,      KEY_NONE,       KEY_NONE,      KEY_NONE,      KEY_NONE,  KEY_F11 }, // 8 I
     // clang-format on
 };
