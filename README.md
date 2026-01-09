@@ -1,6 +1,6 @@
 # C64UsbKeyboard
 ### What it does
-Connects old Keyboards from Commodore 64 machines to USB, so you can plug them into Retro C64Nano devices. 
+Connects old Keyboards from Commodore 64 machines to USB, so you can plug them into Retro [C64Nano](https://github.com/MiSTle-Dev/C64Nano) devices. 
 
 
 <img src="./doc/resources/IMG_20260109_163311.jpg" alt="drawing" width="300"/> 
@@ -17,7 +17,7 @@ The C64 Nano was working, and I had a great summer playing all the old games I'd
 
 Without question, the original keyboard must work, and that brings us to the point. How do we connect this old keyboard to the C64Nano Companion Board?
 
-To solve this, I thought in many directions, for example extend the Companion Board with a I2C interface, or use the [WeAct RP2350B](https://github.com/WeActStudio/WeActStudio.RP2350BCoreBoard/tree/main) board, which has plenty of IOs. 
+To solve this, I thought in many directions, for example extend the Companion Board with a I2C interface, or use the [WeAct RP2350B](https://github.com/WeActStudio/WeActStudio.RP2350BCoreBoard/tree/main) board as Companion, which has plenty of IOs. 
 
 The solution implemented here, simply uses a Bluepill board connected to the USB interface of the C64Nano computer. Easy to build, easy to connect and I have plenty of those boards lying around.
 
@@ -45,6 +45,9 @@ Overall, I used Bob's software and the Arduino Keyboard Library source code.
 
 One small problem arose with the cursor movement of the companion board's OSD. It doesn't accept Shift + Arrow-Up. Therefore, there's a block in the code that intercepts this key combination and sends the correct HID code for Arrow-Up.
 
+Another question was, what to do with the F12 and the play tape keys. Fortunately Bob added the Restore key to the matrix with an addtional row and column. So I simply added two buttons into the matrix and mapped them to corresponding functions.
+
+Oddly enough, I was able to do without key debouncing. If problems arise unexpectedly, it can easily be added later.
 
 <img src="./doc/resources/IMG_20260109_162811.jpg" alt="drawing" width="300"/> 
 
