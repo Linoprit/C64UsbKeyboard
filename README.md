@@ -49,6 +49,8 @@ Another question was, what to do with the F12 and the play tape keys. Fortunatel
 
 Oddly enough, I was able to do without key debouncing. If problems arise unexpectedly, it can easily be added later.
 
+> Unplug the Bluepill from USB, before flashing. Otherwise, there is a good chance your host's USB-Driver will get crashed and you need to reboot. The Stm32f103 has no automatic disconnect circuit.
+
 <img src="./doc/resources/IMG_20260109_162811.jpg" alt="drawing" width="300"/> 
 
 Hope this project is useful to someone.
